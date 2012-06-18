@@ -148,7 +148,7 @@
 							<int key="type">1</int>
 							<double key="pointSize">17</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="658200692">
+						<object class="NSFont" key="IBUIFont" id="564115918">
 							<string key="NSName">Helvetica</string>
 							<double key="NSSize">17</double>
 							<int key="NSfFlags">16</int>
@@ -177,6 +177,7 @@
 						<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
 						<float key="IBUIMinimumFontSize">17</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
+							<int key="IBUIKeyboardType">4</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription">
@@ -207,7 +208,7 @@
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUINumberOfLines">3</int>
 						<reference key="IBUIFontDescription" ref="961751264"/>
-						<reference key="IBUIFont" ref="658200692"/>
+						<reference key="IBUIFont" ref="564115918"/>
 					</object>
 					<object class="IBUILabel" id="815745089">
 						<reference key="NSNextResponder" ref="774585933"/>
@@ -227,7 +228,7 @@
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">10</float>
 						<reference key="IBUIFontDescription" ref="961751264"/>
-						<reference key="IBUIFont" ref="658200692"/>
+						<reference key="IBUIFont" ref="564115918"/>
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
