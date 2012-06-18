@@ -125,6 +125,39 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
 
 - (IBAction)calculateMD5:(id)sender
 {
+    
+    NSString *handshakeId = textField.text;
+    NSString *handshakeUrl = [NSString stringWithFormat: @"http://192.168.1.4:9292/remote/%@", [handshakeId stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSLog(@"handshakeUrl: %@", handshakeUrl);
+    
+    NSData *jsonToSign = [NSData dataWithContentsOfURL:[NSURL URLWithString: handshakeUrl]];
+    
+    NSLog(@"Got to sign: %@", jsonToSign);
+    
+    if (!jsonToSign) {
+        NSLog(@"Got invalid response from server");
+        return;
+    }
+    
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonToSign options:kNilOptions error:nil];
+    
+    if (!json) {
+        NSLog(@"Could not decode JSON");
+        return;
+    }
+    
+    NSString* sessionId = [json objectForKey: @"challenge"];
+    NSString* username = [json objectForKey: @"username"];
+    
+    if (!sessionId || !username) {
+        NSLog(@"Invalid JSON to sign");
+        return;
+    }
+    
+    const char *sessionIdCString = [sessionId cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *usernameCString = [username cStringUsingEncoding:NSUTF8StringEncoding];
+    
     /** Get a FILE object so that we can pass it to PEM_read_PrivateKey, there must be a shorter way... */
     NSURL *pemUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"private_key" ofType:@"pem"]];
     NSFileHandle *pemFileHandle = [NSFileHandle fileHandleForReadingFromURL:pemUrl error:NULL];
@@ -160,11 +193,11 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     unsigned char authdata[MAX_AUTHDATA_SIZE];
     int auth_len = 0;
     
-    auth_len += append_bytes(authdata + auth_len, SESSIONID, SESSIONID_LEN);
+    auth_len += append_bytes(authdata + auth_len, sessionIdCString, SESSIONID_LEN);
     if (auth_len + 1 >= MAX_AUTHDATA_SIZE) return;
     authdata[auth_len] = 50; // SSH_MSG_USERAUTH_REQUEST
     auth_len++;
-    auth_len += append_string(authdata + auth_len, USERNAME, MAX_AUTHDATA_SIZE - auth_len);
+    auth_len += append_string(authdata + auth_len, usernameCString, MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_string(authdata + auth_len, "octokey-auth", MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len >= MAX_AUTHDATA_SIZE) return;
@@ -198,7 +231,6 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     NSString *output = [NSString stringWithCString:outputBuffer length: outputLength];
 
     NSLog(@"Auth-request: %@", output);
-    
     
 	/** Calculate MD5*/
 	NSString *string =  textField.text;
