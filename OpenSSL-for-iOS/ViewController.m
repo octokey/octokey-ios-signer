@@ -27,10 +27,6 @@
 #pragma mark -
 #pragma mark OpenSSL
 
-#define USERNAME "martin"
-#define SESSIONID "\x29\x69\xb9\x3c\xc4\x02\xdd\x46\x12\x15\x8f\xf1\x80\xb8\xa6\x1e\xf2\xe1\x2d\xcb\x88\x77\x04\x59\xa0\x39\xb8\x51\xf1\x00\x0c\xed"
-#define SESSIONID_LEN 32
-
 #define MAX_KEY_FILE_SIZE 10240
 #define MAX_KEY_BLOB_SIZE 10240
 #define MAX_BIGNUM_SIZE 10240
@@ -149,14 +145,16 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     
     NSString* sessionId = [json objectForKey: @"challenge"];
     NSString* username = [json objectForKey: @"username"];
+    NSString* requestUrl = [json objectForKey: @"request_url"];
     
-    if (!sessionId || !username) {
+    if (!sessionId || !username || !requestUrl) {
         NSLog(@"Invalid JSON to sign");
         return;
     }
     
     const char *sessionIdCString = [sessionId cStringUsingEncoding:NSUTF8StringEncoding];
     const char *usernameCString = [username cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *requestUrlCString = [requestUrl cStringUsingEncoding:NSUTF8StringEncoding];
     
     /** Get a FILE object so that we can pass it to PEM_read_PrivateKey, there must be a shorter way... */
     NSURL *pemUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"private_key" ofType:@"pem"]];
@@ -193,18 +191,16 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     unsigned char authdata[MAX_AUTHDATA_SIZE];
     int auth_len = 0;
     
-    auth_len += append_bytes(authdata + auth_len, sessionIdCString, SESSIONID_LEN);
+    auth_len += append_string(authdata + auth_len, sessionIdCString, MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len + 1 >= MAX_AUTHDATA_SIZE) return;
-    authdata[auth_len] = 50; // SSH_MSG_USERAUTH_REQUEST
-    auth_len++;
+    auth_len += append_string(authdata + auth_len, requestUrlCString, MAX_AUTHDATA_SIZE - auth_len);
+    if (auth_len + 1 >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_string(authdata + auth_len, usernameCString, MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_string(authdata + auth_len, "octokey-auth", MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_string(authdata + auth_len, "publickey", MAX_AUTHDATA_SIZE - auth_len);
-    if (auth_len + 1 >= MAX_AUTHDATA_SIZE) return;
-    authdata[auth_len] = 1; // true, i.e. a signature is included
-    auth_len++;
+    if (auth_len >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_string(authdata + auth_len, algorithm_name, MAX_AUTHDATA_SIZE - auth_len);
     if (auth_len >= MAX_AUTHDATA_SIZE) return;
     auth_len += append_bytes(authdata + auth_len, key_blob, blob_len);
