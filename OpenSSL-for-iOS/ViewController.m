@@ -121,6 +121,7 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
 
 - (IBAction)calculateMD5:(id)sender
 {
+    self.view.backgroundColor = [UIColor blackColor];
     
     NSString *handshakeId = textField.text;
     NSString *handshakeUrl = [NSString stringWithFormat: @"https://octokey.herokuapp.com/remote/%@", [handshakeId stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -238,6 +239,7 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
         NSLog(@"Replying to the server failed");
         return;
     }
+    self.view.backgroundColor = [UIColor greenColor];
 }
 
 - (IBAction)calculateSHA256:(id)sender 
