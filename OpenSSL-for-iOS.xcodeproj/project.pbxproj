@@ -22,6 +22,7 @@
 		533ED3281528C5140005C6FA /* Icon~iPad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 533ED3271528C5140005C6FA /* Icon~iPad@2x.png */; };
 		533ED32C1528C53B0005C6FA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 533ED32A1528C53B0005C6FA /* libcrypto.a */; };
 		533ED32D1528C53B0005C6FA /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 533ED32B1528C53B0005C6FA /* libssl.a */; };
+		D6BC5A7E158EBFCB0003E83A /* private_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = D6BC5A7D158EBFCB0003E83A /* private_key.pem */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		533ED3271528C5140005C6FA /* Icon~iPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon~iPad@2x.png"; path = "../Icon~iPad@2x.png"; sourceTree = "<group>"; };
 		533ED32A1528C53B0005C6FA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		533ED32B1528C53B0005C6FA /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = lib/libssl.a; sourceTree = "<group>"; };
+		D6BC5A7D158EBFCB0003E83A /* private_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = private_key.pem; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				533ED3251528C4FA0005C6FA /* Icon~ipad.png */,
 				533ED3211528C4960005C6FA /* Icon@2x.png */,
 				533ED31F1528C4950005C6FA /* Icon.png */,
+				D6BC5A7D158EBFCB0003E83A /* private_key.pem */,
 			);
 			name = Ressources;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 				533ED3221528C4960005C6FA /* Icon@2x.png in Resources */,
 				533ED3261528C4FA0005C6FA /* Icon~ipad.png in Resources */,
 				533ED3281528C5140005C6FA /* Icon~iPad@2x.png in Resources */,
+				D6BC5A7E158EBFCB0003E83A /* private_key.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +337,7 @@
 				533ED31E1528C4840005C6FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

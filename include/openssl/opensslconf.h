@@ -83,8 +83,8 @@
 
 #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
 #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
-#define ENGINESDIR "/data/home/fschulze/dev/ios/OpenSSL-for-iPhone/bin/iPhoneSimulator5.1-i386.sdk/lib/engines"
-#define OPENSSLDIR "/data/home/fschulze/dev/ios/OpenSSL-for-iPhone/bin/iPhoneSimulator5.1-i386.sdk"
+#define ENGINESDIR "/0/ios/Octokey/vendor/openssl-for-iphone/bin/iPhoneSimulator5.1-i386.sdk/lib/engines"
+#define OPENSSLDIR "/0/ios/Octokey/vendor/openssl-for-iphone/bin/iPhoneSimulator5.1-i386.sdk"
 #endif
 #endif
 
