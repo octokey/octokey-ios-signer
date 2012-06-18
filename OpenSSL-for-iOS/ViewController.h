@@ -9,8 +9,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBarSDK.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ZBarReaderDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField *textField;
 @property (nonatomic, strong) IBOutlet UILabel *md5TextField;
@@ -20,4 +21,5 @@
 - (IBAction)calculateMD5:(id)sender;
 - (IBAction)calculateSHA256:(id)sender;
 
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info;
 @end

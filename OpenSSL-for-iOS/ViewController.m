@@ -18,6 +18,8 @@
 #include <openssl/rsa.h>
 #include <openssl/evp.h>
 
+#include "ZBarSDK.h"
+
 @implementation ViewController
 
 @synthesize textField;
@@ -123,7 +125,11 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
 {
     self.view.backgroundColor = [UIColor blackColor];
     
-    NSString *handshakeId = textField.text;
+    [self doAuthRequest: textField.text];
+}
+
+- (void) doAuthRequest:(NSString*)handshakeId
+{
     NSString *handshakeUrl = [NSString stringWithFormat: @"https://octokey.herokuapp.com/remote/%@", [handshakeId stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSLog(@"handshakeUrl: %@", handshakeUrl);
@@ -135,8 +141,7 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     if (!jsonToSign) {
         NSLog(@"Got invalid response from server");
         return;
-    }
-    
+    } 
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonToSign options:kNilOptions error:nil];
     
     if (!json) {
@@ -241,7 +246,6 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     }
     self.view.backgroundColor = [UIColor greenColor];
 }
-
 - (IBAction)calculateSHA256:(id)sender 
 {	
 	/* Calculate SHA256 */
@@ -280,4 +284,23 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void) viewDidAppear:(BOOL)animated
+{
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
+    reader.readerDelegate = self;
+    reader.supportedOrientationsMask = ZBarOrientationMaskAll;
+    ZBarImageScanner *scanner = reader.scanner;
+    
+    [scanner setSymbology:ZBAR_I25 config: ZBAR_CFG_ENABLE to: 0];
+    [self presentModalViewController:reader animated:YES];
+}
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    ZBarSymbolSet *symbolSet = [info objectForKey: ZBarReaderControllerResults];
+    NSLog(@"FOUND: %@ -> %@", info, symbolSet);
+    for (ZBarSymbol *symbol in symbolSet) {
+        [self doAuthRequest: [symbol data]];
+    }
+}
 @end
