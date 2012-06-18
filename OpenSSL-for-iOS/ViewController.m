@@ -123,7 +123,7 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
 {
     
     NSString *handshakeId = textField.text;
-    NSString *handshakeUrl = [NSString stringWithFormat: @"http://192.168.1.4:9292/remote/%@", [handshakeId stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *handshakeUrl = [NSString stringWithFormat: @"https://octokey.herokuapp.com/remote/%@", [handshakeId stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSLog(@"handshakeUrl: %@", handshakeUrl);
     
