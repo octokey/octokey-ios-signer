@@ -231,25 +231,17 @@ void ssh_rsa_sign(const EVP_PKEY *key, unsigned char *sig_r, unsigned int *len_r
     NSString *output = [NSString stringWithCString:outputBuffer length: outputLength];
 
     NSLog(@"Auth-request: %@", output);
+
+    NSMutableURLRequest *responder = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:handshakeUrl]];
+    responder.HTTPMethod = @"POST";
+    responder.HTTPBody = [NSData dataWithBytes:outputBuffer length:outputLength];
     
-	/** Calculate MD5*/
-	NSString *string =  textField.text;
-    unsigned char *inStrg = (unsigned char*)[[string dataUsingEncoding:NSASCIIStringEncoding] bytes];
-    unsigned long lngth = [string length];
-	unsigned char result[MD5_DIGEST_LENGTH];
-	NSMutableString *outStrg = [NSMutableString string];
-	
-    MD5(inStrg, lngth, result);
-	
-    unsigned int i;
-    for (i = 0; i < MD5_DIGEST_LENGTH; i++)
-    {
-        [outStrg appendFormat:@"%02x", result[i]];
+    NSData *finalReply = [NSURLConnection sendSynchronousRequest:responder returningResponse:nil error:nil];
+    
+    if (!finalReply) {
+        NSLog(@"Replying to the server failed");
+        return;
     }
-	md5TextField.text = outStrg;
-	
-	//Hide Keyboard after calculation
-	[textField resignFirstResponder];
 }
 
 - (IBAction)calculateSHA256:(id)sender 
